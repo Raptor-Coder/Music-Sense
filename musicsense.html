@@ -38,3 +38,46 @@
 #audioLevel {
   font-size: 14px;
 }
+
+#startButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px 30px;
+  font-size: 18px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#startButton:hover {
+  background-color: #45a049;
+}
+
+.hidden {
+  display: none;
+}
+
+</style></head><body><canvas id="visualizer"></canvas><div id="infoPanel"><div id="detectionStatus">Waiting to start...</div><div id="audioLevel">Audio Level: 0</div></div><button id="startButton">Start Music Detection</button><script>let audioContext;
+let analyser;
+let microphone;
+let canvas;
+let ctx;
+let animationId;
+let isListening = false;
+
+function initAudio() {
+  audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  analyser = audioContext.createAnalyser();
+  analyser.fftSize = 2048;
+
+  canvas = document.getElementById('visualizer');
+  ctx = canvas.getContext('2d');
+
+  resize();
+  window.addEventListener('resize', resize);
+}
