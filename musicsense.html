@@ -104,3 +104,32 @@ function startListening() {
       document.getElementById('detectionStatus').textContent = 'Error: Unable to access microphone';
     });
 }
+
+function visualize() {
+  const bufferLength = analyser.frequencyBinCount;
+  const dataArray = new Uint8Array(bufferLength);
+
+  function draw() {
+    animationId = requestAnimationFrame(draw);
+
+    analyser.getByteFrequencyData(dataArray);
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const barWidth = (canvas.width / bufferLength) * 2.5;
+    let barHeight;
+    let x = 0;
+
+    for (let i = 0; i < bufferLength; i++) {
+      barHeight = dataArray[i] / 2;
+
+      const r = barHeight + (25 * (i / bufferLength));
+      const g = 250 * (i / bufferLength);
+      const b = 50;
+
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+
+      x += barWidth + 1;
+    }
