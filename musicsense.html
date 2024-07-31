@@ -133,3 +133,41 @@ function visualize() {
 
       x += barWidth + 1;
     }
+
+    // Calculate and display audio level
+    const audioLevel = dataArray.reduce((a, b) => a + b) / bufferLength;
+    document.getElementById('audioLevel').textContent = `Audio Level: ${Math.round(audioLevel)}`;
+
+    // Adjust visualization based on audio level
+    if (audioLevel > 50) {
+      // Music detected, make visualization more dynamic
+      ctx.globalAlpha = 0.8;
+      ctx.globalCompositeOperation = 'lighter';
+    } else {
+      // No significant audio, make visualization subtle
+      ctx.globalAlpha = 0.5;
+      ctx.globalCompositeOperation = 'source-over';
+    }
+  }
+
+  draw();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initAudio();
+
+  document.getElementById('startButton').addEventListener('click', startListening);
+});
+
+// Add some interactivity
+canvas.addEventListener('mousemove', (event) => {
+  const rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+
+  ctx.beginPath();
+  ctx.arc(x, y, 50, 0, 2 * Math.PI);
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+  ctx.fill();
+});
+</script></body></html>
