@@ -81,3 +81,26 @@ function initAudio() {
   resize();
   window.addEventListener('resize', resize);
 }
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function startListening() {
+  if (isListening) return;
+
+  navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    .then(stream => {
+      microphone = audioContext.createMediaStreamSource(stream);
+      microphone.connect(analyser);
+      isListening = true;
+      document.getElementById('detectionStatus').textContent = 'Listening for music...';
+      document.getElementById('startButton').classList.add('hidden');
+      visualize();
+    })
+    .catch(err => {
+      console.error('Error accessing microphone:', err);
+      document.getElementById('detectionStatus').textContent = 'Error: Unable to access microphone';
+    });
+}
